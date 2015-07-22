@@ -1,0 +1,149 @@
+* 概述
+** 课程目标：
+   - 培养正规的，大气的编程习惯
+   - 以良好方式编写c++class:基于对象Object Base
+     - class with pointer
+       例子：String
+     - class without pointer
+       复数：complex
+   - 学习Classes之间关系:面向对象Object Oriented
+     - 继承
+     - 委托
+     - ？
+** 版本
+   - c++ 98(1.0)
+   - c++ 03
+   - c++ 11(2.0)
+   - c++ 14
+   - c++ = c++语言 + c++标准库
+** book
+   - c++ stl 源码剖析 侯捷
+** c vs c++
+   - c所提供的类型是'全局的且固定的'，就给你金木水火土让你造世界，
+     但这样函数操作数据会造成杂乱的现象
+   - c++提供创建类型（数据和操作的集合），并给予访问规则。
+** c++ 代码基本形式
+   1. .h #classes declaration
+   2. .cpp include<sl> include "自己写的.h"  #
+   3. .h(standard lib)
+   :: 不同平台有不同的类型名称甚至没有类型名
+** output c++ c
+   - <iostream.h> c++
+   - <stdio.h> c
+** Header 中的防卫式声明
+   complex.h
+   #+BEGIN_SRC c++
+#ifndef __COMPLEX__
+#define __COMPLEX__
+
+
+
+#endif 
+   #+END_SRC
+
+** class声明
+   - class head
+   - class body   
+     1. inline（内联）函数在类体定义
+	- 有些函数在这里定义，另外一些在body之外定义
+	- 有宏的特性没有宏的缺点
+	- 编译器没有能力把 复杂函数 作为inline func处理
+	  你只有建议权，但没有决定权，由编译器决定是否作为inline处理
+     2. class template
+	- template<typename T> #复数实部虚部的类型在需要时才指定
+	- 怎么给变量声明呢？ --- T re,im;
+	  - 怎么使用呢：complex<double> c1(2.5, 1.5);
+	  - complex<int> c2(2,6);	 
+     3. access level
+	- public
+	- private
+     4. constructor(ctor ,构造函数)
+	1) 类型 = ctor名
+	2) default argument : complex(double r = 0, double i = 0)
+	3) 无返回类型：因为不需要有，编译器说ctor就是创建这种对象的，不能改变了，不必写，害怕你写错~
+	4) initialization list(for ctor only):初始化参数尽量不要在大括号内用赋值写，忒tm丑了
+	   - 一个变量的赋值有两个阶段：初始化initialize和赋值assignment，不要放弃初始化的权利
+            #+BEGIN_SRC c++
+  public:
+     complex (double r = 0, double i = 0)
+	: re (r), im (i)
+     {}	 
+	      #+END_SRC
+	5) 不带指针的类一般不需要析构函数
+	6) ctor可以有很多个----重载overloading :: 这个设定有点像 T一样提供一种方便
+	   - 同名的函数根据传入参数不同而区分 就是 overloading 有点像过载，过载就是多于本来的一个么
+	   - ?real@complex@@QBENXZ 这是编译器生成的函数解析
+	   - :question: 重载是否给编译器带来迷惑，标准是你的函数调用overloading func时是否
+	    会让编译器产生困惑，不知选哪个
+	   - :question: 将构造函数放在private里
+	     - design pattern： singleton 给类做绝育手术
+	     - 类内 自己准备了一份'自己'
+     5. const member func(常量成员函数)
+	- 在函数声明后，函数体前，加const
+	  double real () const { return re; } #类似get函数
+	  很多程序员都没有这个经验
+	- class里的函数分为 会改变对象数据的，与 不会改变数据内容的
+          :不改变数据的马上加上 const:
+	  - () const {} 
+     6. pass by value vs. pass by reference(to const)
+	- 所有的传递尽量都要传引用'&'，少用pass by value
+	- pass by value 是把value整包传进去--copy到函数栈中 ::太浪费了
+	- c可以传指针 c++传引用 '&'
+	- pass ref 有个风险，他改了，那我也被改了。如果我确认该引用不允许改
+	  那么，可以 pass by referentce to const，不让改就加上const，别模棱两可
+     7. return by value vs. return by reference(to const)
+	- 选择c++是因为效率，所以要把每一个有效率的操作都内化为自己的习惯
+	- 同理：返回值的传递也尽量 by reference
+	- eg : complex& operator += (const value&);
+
+     8. friend友元
+	- 概述
+	  - 友元是啥就是'走关系，开后门'
+	  - so, friend可以拿私有数据
+	  - 尽量不要太多friend
+	- 相同class的各个objects互为友元
+	  - so,根据这个c++规定，各个objects可以相互拿私有数据
+
+     9. class body 外的各种定义(definitions)
+	什么情况可以pass by ref
+	什么情况可以return by ref
+	- 函数返回结果 要放在哪里，放在本来已经有的空间里，比如放在传入的引用参数中
+	- 如果没法改变传入的引用参数，也就是不能使用本来已经有的空间里。必须重新创建
+	- 一个空间，这个就绝对不能return by ref。因为函数结束时，该空间会被重新分
+	- 给其他值，所以只能传值。相当于传个拷贝的值出去。不传“地址”。
+     10. 操作符重载 operator overloading 之成员函数 this
+         - 谁掉用我，谁就是this，this是隐藏的
+	 - 所有成员函数一定带着一个隐藏的参数，叫this
+	 - 参数列表中不可以写，但函数中可以用
+	 - complex::operator += （const complex& r）
+	 - +=操作符返回类型不可以是void 有可能连续使用 
+	   x += y += z
+     11. return by reference 语法分析
+	 传递者不需要知道接收者是以什么形式接收
+	 - inline complex&  
+           doapl(complex * ths, comst complex& r)
+	   {
+              ...
+	      return *ths //*ths 是个value 而上面接收是引用，这可以的
+            }
+
+     12. 操作符重载之 非成员函数 无this
+	 - 这是全局函数，是没有this pointer的，请注意
+
+	 - 现在情况：返回绝对不能是ref，必然是value  why？
+	   因为不能用this，所以需要创建新空间来存放，新空间会随函数销毁
+	   所以，销毁前必须传值出去。如果传引用，而函数销毁，则该引用会
+	   引用错误的东西。
+	 - 所以是否ref还是value，是取决于函数内使用参数传值，还是需要
+	   创建一个空间，如果需要创建空间，这很危险，必须传值 
+	 - 临时对象-temp object: typename();
+	   - 没有名称，生命很短，下一行就死了。
+	   - 标准库大量且经常使用
+	   - 语法类似 创建对象 但是没有赋值一个引用，且到一下行就销毁了
+
+	     - complex c1(1,1)
+
+	     - complex (0,1)
+
+	 - c++就没有作用在右边operand的这种语法
+	 - '<<'操作符重载只能选全局的 非成员函数 无this的这种

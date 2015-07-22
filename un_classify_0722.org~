@@ -1,0 +1,4 @@
+* python __init__.py  和 __all__变量名的作用
+** package 和 module
+   - 一个.py就是一个module
+   - 一个含有__init__.py的目录就是一个package

@@ -1,0 +1,37 @@
+* python __init__.py  和 __all__变量名的作用
+** package 和 module
+   - 一个.py就是一个module
+   - 一个含有__init__.py的目录就是一个package
+   - from [package.module] import [类/函数/属性]
+** __all__ 和 *
+   - 在package的__init__.py中 和 module中 可以声明__all__=[]
+   - 一旦声明__all__，下面的语句只会包含__all__列表中的内容而不是所有内容
+     1. from package import *  # 会包含__init.py__ 里面 __all__列表内容
+     2. from package.module import * #会包含module(.py)里面 __all__列表内容
+   - 如果不声明 __all__ , import *会包含所有不以‘__’（非私有）开头的内容(py文件和函数)
+
+
+* python __name__
+if (module is imported):
+     __name__ = str(module.name)
+else:
+     __name__ = '__main__'
+
+#+BEGIN_SRC 
+1. 如果module是被导入，__name__的值为模块名字
+2. 如果module是被直接执行，__name__的值为 '__main__'
+  #+END_SRC
+
+* [tips]由于import的方便性，可以用类作为宏定义的集合
+  #+BEGIN_SRC python
+class DefaultConfig(object):
+
+    PROJECT = "loucloud"
+    DEBUG = False
+    TESTING = False
+    SECRET_KEY = 'your secret key'
+    SQLALCHEMY_ECHO = True
+    CACHE_TYPE = 'simple'
+    CACHE_DEFAULT_TIMEOUT = 60
+  
+  #+END_SRC

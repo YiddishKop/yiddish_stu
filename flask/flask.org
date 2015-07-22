@@ -1,0 +1,41 @@
+* flask介绍及安装
+  - sudo apt-get install python-virtualenv #安装虚拟环境包
+  - mkdir myproject / cd myproject
+  - virtualenv venv # 生成新目录venv虚拟环境
+  - 启动虚拟环境：$ . venv/bin/activate
+  - pip install -i http://mirrors.alinyuncs.com/pypi/simple Flask
+* Flask运行及调试
+  - 一个简单的例子
+    #+BEGIN_SRC python
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'hello'
+
+if __name__ == '__main__':
+    app.run()
+  
+  #+END_SRC
+  - 稍微复杂点--通过url地址的输入给函数传入参数，函数处理参数并返回结果到网页
+    #+BEGIN_SRC python
+@app.route('/user/<username>')
+def show_user(username):
+    return "username %s" % username
+    #+END_SRC
+  - 甚至给url输入限定类型
+    #+BEGIN_SRC python
+@app.route('/post/<int:post_id>')
+    
+    #+END_SRC
+  - 通过函数名来定义函数入口(url地址)：url_for('函数名'[,关键字参数对应url中变量部分])
+    #+BEGIN_SRC python
+>>> with app.test_request_context():
+...     print url_for('index')
+...     print url_for('login')
+...     print url_for('login', next='/')
+...     print url_for('profile', username='John Doe')
+    
+    #+END_SRC
+* 静态文件及渲染模板

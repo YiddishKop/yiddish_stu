@@ -1,0 +1,32 @@
+* 一句话概括Flask = app + extenstions + bluprints
+   a project could instantiate an application object, initialize several extensions, and register a collection of blueprints.
+
+* 关于view显示这样一种模型
+  - 浏览器输入栏作为输入： @user.route ('/')
+  - 函数处理输入并反馈到浏览器：
+    #+BEGIN_SRC python
+def index():
+     return "hello"
+#+END_SRC  
+
+* 通过Flask()方法，生成Flask对象
+  app = Flask(app_name)
+
+* 一个应用(Flask对象)包含多个业务(blueprint)
+  - bluprint 概述
+    - Flask associates view functions with blueprints
+    - Blueprint 是一个存储操作方法的容器
+    - 这些操作在这个Blueprint 被注册到一个应用之后就可以被调用
+    - Flask 可以通过Blueprint来组织URL以及处理请求
+    - app.register_blueprint(blueprint)
+      #+BEGIN_SRC python
+  from flask import Blueprint,Flask
+  simple_page = Blueprint('simple_page', __name__,
+                          template_folder='templates')
+  app = Flask(__name__)
+  app.register_blueprint(simple_page)
+      #+END_SRC
+  - Blueprint resources
+    1. Blueprint Resource Folder: usually identify by  __name__
+    2. Static Files: location of the blueprint + /static
+    3. Building URLs

@@ -1,0 +1,113 @@
+* 目标：
+  1. loucloud小型私有云平台
+  2. 基本功能
+     - 用户管理
+     - 服务器管理 - 添加删除服务器到资源池
+     - 镜像管理 - 镜像用于创建虚拟机，是一个装好系统且做了配置的特殊磁盘
+     - 虚拟机模板管理 - 模板么，就是模子，几个cpu多少内存使用镜像
+     - 虚拟机管理
+     - 配置管理
+* 关键词：
+  - 局域网小型私有云
+  - 服务器和虚拟机管理功能
+  - 物理资源池 服务器  虚拟机 调度策略
+* 技术架构 = web开发 + 虚拟化开发
++-------------------------------------+
+|                                     |
+|           Flask Web                 |
+|                                     |
++-------------------------------------+
+|                                     |
+|   Flask-SQLAlchemy    Libvirt API   |
+|                                     |
++-------------------------------------+
+|                                     |
+|      MySql            QEMU          |
++-------------------------------------+
+** 虚拟化简介
+   - 虚拟化、资源池、os
+     虚拟化技术简单来说就是将一台物理服务器虚拟出虚拟 CPU，内存等资源，将操作系统运行在这些虚拟资源构成的资源池上。
+   - 常用虚拟化软件
+     - KVM, Xen, VMware ESXi #要求硬件支持虚拟化
+     - QEMU不要求硬件支持
+** Libvirt API简介
+   - 提供多种虚拟化平台的统一管理接口
+   - 基于libvirt开发虚拟机管理模块，如生命周期
+   - python-libvirt 是python版本的 libvirt API
+** Flask简介
+   - Flask 基础框架包
+   - Flask-SQLalchmy: ORM，用于数据库操作
+   - Flask-WTF:页面表单扩展
+   - Flask-Cache：缓存扩展
+   - Flask-Login：用户登录认证及会话管理
+   - Flask-Script:脚本支持 如manage.py这类启动和管理脚本
+* 开发环境搭建
+** 安装virtualenv：构建python工程运行虚拟环境
+   - sudo apt-get install python-virtualenv
+   - 虚拟环境初始化
+     - cd [工程目录]
+     - virtualenv venv #为项目创建虚拟运行环境（就是个目录）
+     - source venv/bin/active（激活虚拟环境）
+** 安装虚拟化相关组件：管理虚拟机
+   - QEMU + python-libvirt
+   - sudo apt-get install qemu libvirt-bin python-libvirt
+   - 启动 libvirt 服务
+     sudo service libvirt-bin start
+   - 查看 libvirt 服务状态
+     sudo service libvirt-bin status
+   - 查看当前虚拟机列表
+     sudo virsh list
+** MySQL相关组件
+   - sudo apt-get install mysql-server
+
+** Flask 及相关扩展
+   - 简便方法： 创建包目录requirement.txt内容如下
+   - flask
+     flask-sqlalchemy
+     flask-wtf
+     flask-cache
+     flask-login
+     flask-script
+     
+   - 安装mysql-python模块依赖的两个包
+     - sudo apt-get install libmysqlclient-dev python-dev  
+   - 安装python-dev模块，   
+     mysql-python #添加到requirement.txt即
+     paramiko # ssh管理组件，添加到requirement.txt即
+     - _如果import paramiko报错 需要手动安装以下包_
+       (venv)**$ pip install pycrypto ecdsa
+   - 虚拟环境初始化及进入：
+     - $ cd [工程目录]
+     - $ virtualenv venv
+     - $ source venv/bin/activate
+       执行完上述命令后，所有通过pip install安装的包都只对venv起作用，与其他虚拟环境相隔离
+       ,而没有通过该命令安装的默认为使用全部虚拟环境
+   - 安装python模块
+     - _执行 requirement.txt之前务必确定里面包的依赖包都安装完毕_
+     - (venv)**$ pip install -r requirement.txt
+   - 最后一步：libvirt比较矫情，必须先下到全局(apt-get install 安到 /usr/lib/python2.7/dist-package)下
+     然后拷贝到 当前虚拟环境中 ( venv/lib/python2.7/site-package)
+     - cp /usr/lib/python2.7/dist-packages/libvirt*  /home/shiyanlou/Code/shiyanlou_cs354/venv/lib/python2.7/site-package
+** Flask 代码框架
+   1. loucloud 代码架构
+      - README.md
+      - loucloud
+	- __init__.py
+	- app.py
+	- config.py
+	- extension.py
+	- static
+	- templates
+	- user
+	  - __init__.py
+	  - views.py
+      - manage.py
+** bootstrap
+** 添加 .gitigonre
+   - 用.gitignore来去掉不需要push的虚拟环境venv文件夹
+     echo "venv" >> .gitignore
+** 通过git提交代码
+   - add
+   - commit
+   - status
+   - push oringin master

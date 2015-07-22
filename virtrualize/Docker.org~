@@ -1,0 +1,25 @@
+* 用docker搭建开发环境
+  我感觉docker安装起来就像装系统的ghost，比如180m的image（ubuntu14.1）。
+其原理又像是kvm虚拟化，比如cgroup提供资源分配，用容器隔离，用aufs实现快速部署。
+** 预备知识
+*** cgroup
+    Cgroup是将任意进程进行分组化管理的Linux内核功能。cgroup本身提供将进程进行分组化管理的功能和接口的基础结构。
+*** 网络隔离
+    网络隔离：每个进程容器运行在自己的网络命名空间里，拥有自己的虚拟接口和IP地址
+*** LXC
+    Linux Container有点像chroot，提供了一个拥有自己进程和网络空间的虚拟环境，但又有别于虚拟机，因为lxc是一种操作系统层次上的资源的虚拟化。
+*** AUFS
+    什么是AUFS? 简单说就是一个文件系统，可以把不同的目录联合在一起。这种文件系统不用格式化，直接挂载即可。
+*** PAAS
+    platform as a service
+** 配置docker
+   1. Installation
+      - $ which wget
+      - $ sudo apt-get update
+        $ sudo apt-get install wget
+      - $ wget -qO- https://get.docker.com/ | sh
+      - $ sudo docker run hello-world #如果这个运行有问题，则需要重启下docker
+	$ sudo service docker restart
+   2. 下载images文件
+      - $ docker pull ubuntu 
+   3. 运行docker run 获得container

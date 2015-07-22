@@ -1,0 +1,3 @@
+* emacs只可远观不可亵玩焉
+  - C-x C-r #not C-f
+  - M-x togger-read-only

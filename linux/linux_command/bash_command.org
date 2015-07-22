@@ -1,0 +1,130 @@
+* 一些小技巧
+** 备份一个文件
+   备份：cp /etc/apt/sources.list /etc/apt/sources.list.backup
+** 万千小流汇成河 论/etc/的重要性
+  - /etc/group
+  - /etc/sudoers
+  - /etc/lsb-release #查看发行信息
+  - /etc/issue       #查看发行信息概要
+* $ tar zxvf zhcon-0.2.5.tar.gz
+我要解压zhcon-0.2.5.tar.gz这个文件，但是如果不加上前面的zxvf这条命令是无法执行的。
+** go
+分别是四个参数
+x : 从 tar 包中把文件提取出来
+z : 表示 tar 包是被 gzip 压缩过的，所以解压时需要用 gunzip 解压
+v : 显示详细信息
+f xxx.tar.gz :  指定被处理的文件是 xxx.tar.gz
+* linux如何加源
+  - 备份
+    - /etc/apt/source.list 和 /etc/apt/source.list.d/
+    - cp /etc/apt/source.list /etc/apt/source.list.backup
+  - 加源
+    - $ source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+    - (deb)表示目录中包含的是二进制软件包，即我们通常使用的已编译好的软件包；
+    - (deb-src)表示是源码包，源码包包含源程序编码、Debian控制文件(.dsc)和“Debian化”该程序所做更改的记录文件diff.gz。
+  - 刷新
+    - $ sudo apt-get update
+* linux关于‘我是谁’的三个回答
+  - $ lsb_release  #发行版信息
+  - $ /proc/version  #内核版本号
+  - $ uname -a  #用户信息（用户名、安装时间等等）
+  
+* linux回望前尘--感慨啊 !!
+  - $ !!  #执行上次命令并显示其结果
+
+* linux我叫你一声你敢答应么？
+  - linux要求程序的绝对地址才能运行
+    - 当前目录下： $ ./程序名
+  - 除非它是built-in的，即内建在bash中的命令
+    - 比如任何目录下都可以执行 ls,tar,mkdir这些命令
+* linux解铃还须系铃人：打包(tar)跟压缩(gzip)
+  -参数
+    - 必须有：tar主参数 c x u f 
+    - 可以有：tar副参数 z v 
+  - 格式：
+      - 打包 ：$ tar -cvf [包文件] [材料文件]
+      - 开苞 ：$ tar -xvf [包文件] -C [目录]
+      - 添包 ：$ tar -uvf [包文件] [材料文件]
+* linux那一'点'的风情-- $ source FileName
+  source命令用法：
+  source FileName
+  作用:在当前bash环境下读取并执行FileName中的命令。
+  注：该命令通常用命令“.”来替代。
+  使用范例：source filename 或 . filename（中间有空格）
+
+* linux任务管理器：$ top and $ ps
+  - ps是照片 
+  - top是电影
+  ps看到的是命令执行瞬间的进程信息,而top可以持续的监视
+  ps只是查看进程,而top还可以监视系统性能,如平均负载,cpu和内存的消耗
+  另外top还可以操作进程,如改变优先级(命令r)和关闭进程(命令k)
+
+* linux中的3个超级玛丽：$ |  $ <  $ >  $ tee
+  - | 将左边命令的标准输出作为标准输入送给右边的命令
+  - > 将左边的标准输出保存到右边的文件中
+  - tee =  | + > 输出文件+打印
+  - 区别
+    - $ command1 | command2
+    - $ command  > file（普通文件，文件描述符，文件设备）
+    - $ command  < file（普通文件，文件描述符，文件设备）
+    左边的命令应该有标准输出 | 右边的命令应该接受标准输入
+    左边的命令应该有标准输出 > 右边只能是文件
+    左边的命令应该需要标准输入 < 右边只能是文件
+
+* linux里的四个福尔莫斯和一个华生- which whereis find locate + grep
+   - $ which 可执行文件名称 # 查看可执行文件位置  eg.$ which wget
+   - $ whereis 文件名 # 查看文件位置
+   - $ locate
+   - & find 目录 文件名  # $ find / -name yl.txt
+   - $ grep yiddishkop /etc/group
+     - 实际上grep是很强大的正则文本搜索命令 $ grep [正则字符] 目录. 
+     - 福尔摩斯搜文件，华生当然搜文本了，累活
+* linux里的户籍管理员 usermod
+ - 1、将 newuser2 添加到组 staff 中 
+  $ usermod -G staff newuser2 
+ - 2、修改 newuser 的用户名为 newuser1 
+  $ usermod -l newuser1 newuser 
+ - 3、锁定账号 newuser1 
+  $ usermod -L newuser1 
+ - 4、解除对 newuser1 的锁定
+  $ usermod -U newuser1
+ - 5、将已有用户追加(append)到已有用户组中
+  $ usermod -a -G root yiddishkop # 此处-a就是append缩写，-a在linux中一般消失all或者append
+* linux拿来主义 $()
+  - 注：shell 中的 $() 和 `` 类似，会先执行这里面的内容
+  - 比如我想把docker ps -a中所有命令放进docker_info中可以这么搞
+    $ echo $(docker ps -a)> docker_info
+* linux我的地盘我做主 /bin/sh -c
+  - 意义：以后的事情我(/bin/sh)说了算，-c表示命令不通过标准输入，直接在后面字符串表示
+  - /bin/sh -c "command line" 
+  - $ docker run -d busybox /bin/sh -c 
+* linux改变源自内心 chmod
+  - $ chmod 751 file  
+    给file的属主分配读、写、执行(7)的权限，给file的所在组分配读、执行(5)的权限，给其他用户分配执行(1)的权限
+  - $ chmod u+x file                　　　   
+    给file的属主增加执行权限
+  - $ chmod _-R_ u+r directory       　   
+    递归地给directory目录下所有文件和子目录的属主分配读的权限
+    - -R代表递归设置所有子目录
+*** 经典例子：把我放进sudoers里面
+    有时候我们执行sudo的时候，出现 xxx is not int the sudoers file 告诉我们当前用户不是sudoer，所以我们要把当前用户添加进去，步骤如下： 1 修改/etc/sudoers文件，进入超级用户，因为没有写权限，所以要先把写权限加上chmod u+w /etc/sudoers。 2 编辑/etc/sudoers文件，找到这一 行："root ALL=(ALL) ALL"在起下面添加"zhc ALL=(ALL) ALL"(这里的zhc是你的用户名)，然后保存。 3 最后恢复没有写权限模式，撤销文件的写权限，chmod u-w /etc/sudoers。 然后我们就可以用zhc用户来编辑root的文件了，比如
+* linux条件执行： 我生$$君可生，我死||君可生  
+  - command1(true) $$ command2(会执行)
+  - command1(false)|| command2(会执行)
+* linux台前幕后：bg %n  fg %n
+  - 你去幕后
+    - 对于尚未执行的命令，命令尾+‘&’： $ wget http://download.rethinkdb.com &
+    - 对于已经执行的命令
+      1. ctrl+z 暂停当前程序
+      2. jobs -l 查询进程号n 
+      3. bg %n 进程放入后台
+  - 你去前台
+    首先此命令肯定在后台
+    1. jobs -l 查询进程号
+    2. fg %n 进程放入前台
+* linux查看某个软件包是否安装
+  $ dpkg -l | grep [软件包名]
+* linux一棵神奇的大树
+  - 查看tree有无安装： $ dpkg -l | grep tree
+  - 安装tree: $ sudo apt-get install tree
+  - 应用tree: $ tree [一个目录]

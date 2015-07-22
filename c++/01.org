@@ -1,0 +1,59 @@
+* c++ 概览
+** hello world
+   - std 是名字空间
+   - stdout 、stdin 是File*类型
+** Standard Library Header File
+   - #include<iostream>
+   - c++ standard library  header file :iostream
+     - cout =  c:stdout(文件指针) 
+     - cin  =  c:stdin(文件指针)
+** namespace （名字空间）：限定某些符号作用域
+   - car::qq 指明教室才可点名答道
+   - using namespace std;//不要这样用，可能会出现名字空间重名，下面是对的
+     using std::cout;
+     using std::endl;
+     或直接使用std::cout
+** 源代码-运行
+   source--precompile--compile--.obj--linker--.exe
+** tips
+*** c++标准规定，主函数必须返回int
+*** std::cout << 'helo' <<std::endl; std::cout<<''<<"\n";效果相同，流程不同
+* 丹青画松石-ege graphics library
+* More than C
+** 基本数据类型和运算
+   - 关系运算6种 ：用于分支跳转 != == < > <= >=
+   - 逻辑运算3种 ：  int a=0,b=1;  a&&b-> false  b||18-> true !a
+   - typedef and #define
+     typedef  *** _NewTypeName_
+     #define _MACRONAME_
+     (注意两种命名方式)
+   - bool
+     bool变量或函数，必须以is/can/shoud做bool前缀
+   - bool and int
+     0 -- false
+     true -- 1
+     non-zero -- true
+** 类型转换
+   - c style : (type)value
+     printf("%d",(int)2.5)
+   - c++ style : static_cast<type>value
+     cout << static_cast<double>(1)/2;
+   - 因为编译器的原因，c++类型转换必须显示声明
+** 初始化
+   int x = 1; //c c++
+   int x(1);  //c++ only
+** 函数
+   - in c98： 局部变量 必须在函数体前面定义  作用域从定义位置到函数尾
+   - in c++： 局部变量 可在函数内任意位置    作用域从定义位置到块尾
+     块： 函数，循环块,如下情况，i=0 内部块的i，与外部块的i不冲突，编译器不报错
+     相当于 main().i与for().i的区别
+     #+BEGIN_SRC c++
+int main(){
+   int i = 0;
+   int sum = 0;
+   for (i = 1,i < 5, i++){
+      sum +=i
+   }
+   std::cout << i<<std::endl;
+}    
+     #+END_SRC

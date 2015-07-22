@@ -1,0 +1,7 @@
+* 关于view显示这样一种模型
+  - 浏览器输入栏作为输入： @user.route ('/')
+  - 函数处理输入并反馈到浏览器：
+#+BEGIN_SRC python
+def index():
+     return "hello"
+#+END_SRC  

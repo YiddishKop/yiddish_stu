@@ -1,0 +1,5 @@
+* 如何查找vim的配置文件vimrc
+  - 进入vim
+  - :version
+  - 从上面查看获得信息vimrc
+  - :echo $VIM
